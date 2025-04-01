@@ -47,4 +47,36 @@ $(document).ready(function(){
 
     $("#animals").find("li").eq(1).remove();
 
+    $("#time").on("click", function () {
+        let date = new Date();
+        alert("The time is " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+    });
+
+    let clickCounter = 0
+    $("#loadBooks").on("click", function() {
+
+        $.ajax({
+            url: "https://openlibrary.org/search.json?q=the+lord+of+the+rings",
+            type: "GET",
+            crossDomain: true,
+            success: function (data) {
+                console.log(data);
+                console.log(data.docs);
+                clickCounter += 1;
+
+                if (clickCounter === 1) {
+                    $("#loadBooksContainer").append("<h2>Loaded Books</h2>");
+                }
+
+                for (let i = (clickCounter - 1) * 5; i < clickCounter * 5; i++) {
+                    $("#loadBooksContainer").append("<div>" + data.docs[i].title + "<span class='text-muted small ms-3'>" + data.docs[i].cover_i + "</span></div>");
+                }
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
 });
